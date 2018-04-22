@@ -22,7 +22,7 @@ namespace GroupAssignment
             var query = "SELECT * FROM ITEMS";
             var results = DAL.ExecuteSQLStatement(query).Tables[0].Rows;
             return GetItemsFromDataRows(results);
-            
+
         }
 
         public int AddInvoice(string invoiceDate)
@@ -39,17 +39,44 @@ namespace GroupAssignment
             var query = "SELECT * FROM Invoice";
             var results = DAL.ExecuteSQLStatement(query).Tables[0].Rows;
             var invoices = new List<Invoice>();
-            foreach(DataRow result in results)
+            foreach (DataRow result in results)
             {
                 var id = int.Parse(result.ItemArray[0].ToString());
                 var splitDate = result.ItemArray[1].ToString().Split('/');
                 var month = int.Parse(splitDate[0]);
                 var day = int.Parse(splitDate[1]);
                 var year = int.Parse(splitDate[2].Split(' ')[0]);
-                var date = new DateTime(year, month,day);
+                var date = new DateTime(year, month, day);
                 invoices.Add(new Invoice(date, id));
             }
             return invoices;
+        }
+
+        public void InsertItem(int itemId, int invoiceId)
+        {
+            var quantityQuery = $"SELECT Quantity FROM InvoiceItems WHERE InvoiceId = {invoiceId} AND ItemId = {itemId}";
+            var quantity = DAL.ExecuteScalarSQL(quantityQuery);
+            if (quantity != "")
+            {
+                var itemQuantity = int.Parse(quantity);
+                IncrementItemQuantity(itemId, invoiceId, itemQuantity);
+            }
+            else
+            {
+                AddInvoiceItem(itemId, invoiceId);
+            }
+        }
+
+        private void IncrementItemQuantity(int itemId, int invoiceId, int quantity)
+        {
+            var updateCommand = $"UPDATE InvoiceItems SET Quantity = {++quantity} WHERE InvoiceId = {invoiceId} AND ItemId = {itemId}";
+            DAL.ExecuteNonQuery(updateCommand);
+        }
+
+        private void AddInvoiceItem(int itemId, int invoiceId)
+        {
+            var insertCommand = $"INSERT INTO InvoiceItems (InvoiceId, ItemId, Quantity) VALUES({invoiceId}, {itemId}, 1)";
+            DAL.ExecuteNonQuery(insertCommand);
         }
 
         public List<Item> GetInvoiceItems(string invoiceId)

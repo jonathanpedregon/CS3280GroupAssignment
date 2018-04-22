@@ -1,4 +1,5 @@
 ﻿using GroupAssignment.Main;
+using GroupAssignment.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -22,10 +23,11 @@ namespace GroupAssignment
     public partial class MainWindow : Window
 
     {
-       
+        private DatabaseHandler DbHandler;
         public MainWindow()
         {
             InitializeComponent();
+            DbHandler = new DatabaseHandler();
         }
 
         /// <summary>
@@ -37,9 +39,11 @@ namespace GroupAssignment
         {
             Search Info = new Search();
             Info.ShowDialog();
-            
+
 
         }
+
+
 
 
         private void updateInvoice_click(object sender, RoutedEventArgs e)
@@ -48,24 +52,74 @@ namespace GroupAssignment
             Info.ShowDialog();
         }
 
-        private void button_Click(object sender, RoutedEventArgs e)
+        private void AddInvoiceButton_Click(object sender, RoutedEventArgs e)
         {
-            var addWindow = new AddInvoice();
-            addWindow.Show();
+            AddInvoiceCanvas.Visibility = Visibility.Visible;
+            GetAndPopulateItems();
+            CreateAddInvoiceDataGrid();
         }
 
-        private void button_Copy_Click(object sender, RoutedEventArgs e)
+        private void GetAndPopulateItems()
         {
-            var editWindow = new EditInvoice();
-            editWindow.Show();
+            var items = DbHandler.GetItems();
+            itemDropDown.Items.Clear();
+            foreach (var item in items)
+            {
+                itemDropDown.Items.Add(item.ToString());
+            }
         }
 
-        private void button_Copy1_Click(object sender, RoutedEventArgs e)
+        private void CreateInvoiceButtonClick(object sender, RoutedEventArgs e)
         {
-            var deleteWindow = new DeleteInvoice();
-            deleteWindow.Show();
+            var date = invoiceDate.SelectedDate;
+            if (date.HasValue)
+            {
+                var invoiceDate = date.Value.ToString("MM/dd/yyyy");
+                var id = DbHandler.AddInvoice(invoiceDate);
+                invoiceNumberTb.Text = id.ToString();
+            }
         }
 
+        private void CreateAddInvoiceDataGrid()
+        {
+            DataGridTextColumn col1 = new DataGridTextColumn();
+            DataGridTextColumn col2 = new DataGridTextColumn();
+            DataGridTextColumn col3 = new DataGridTextColumn();
+            invoiceItemDataGrid.Columns.Add(col1);
+            invoiceItemDataGrid.Columns.Add(col2);
+            invoiceItemDataGrid.Columns.Add(col3);
+            col1.Binding = new Binding("Id");
+            col2.Binding = new Binding("Name");
+            col3.Binding = new Binding("Cost");
+            col1.Width = 50;
+            col2.Width = 150;
+            col3.Width = 50;
+            col1.Header = "Id";
+            col2.Header = "Name";
+            col3.Header = "Cost";
+        }
+
+        private void AddItemButtonClick(object sender, RoutedEventArgs e)
+        {
+            var selectedItem = itemDropDown.SelectedItem.ToString().Split('-');
+            if (selectedItem.Length > 1)
+            {
+                var itemId = int.Parse(selectedItem[0].Trim());
+                var name = selectedItem[1].Trim();
+                var cost = Math.Round(decimal.Parse(selectedItem[2].Trim().Substring(1, selectedItem[2].Trim().Length - 1)), 2);
+                var invoiceId = int.Parse(invoiceNumberTb.Text);
+                DbHandler.InsertItem(itemId, invoiceId);
+                invoiceItemDataGrid.Items.Add(new Item(itemId, name, cost));
+                IncreaseInvoiceTotal(cost);
+            }
+        }
+
+        private void IncreaseInvoiceTotal(decimal additionalCost)
+        {
+            var currentCost = decimal.Parse(invoiceTotalTb.Text.Remove(0, 1));
+            var newTotal = currentCost + additionalCost;
+            invoiceTotalTb.Text = $"${newTotal}";
+        }
 
         /* We will have createInvoice button that will allow the user to create a new invoice
 *  it will open up a new window that will allow user to input the date of the invoice

@@ -8,7 +8,7 @@
         Title="AddInvoice" Height="449.721" Width="365.231">
     <Grid Margin="0,0,3.6,0.4">
         <DatePicker HorizontalAlignment="Left" Margin="111,121,0,0" VerticalAlignment="Top" x:Name="invoiceDate"/>
-        <Label x:Name="label" Content="Invoice Number:" HorizontalAlignment="Left" Margin="29,160,0,0" VerticalAlignment="Top"/>
+        <Label x:Name="label" Content="Invoice Number:" HorizontalAlignment="Left" Margin="29,159,0,0" VerticalAlignment="Top"/>
         <TextBox x:Name="invoiceNumberTb" HorizontalAlignment="Center" Height="23" Margin="132,162,103.6,0" TextWrapping="Wrap" Text="TBD" VerticalAlignment="Top" Width="120" IsReadOnly="True"/>
         <ComboBox x:Name="itemDropDown" HorizontalAlignment="Left" Margin="58,231,0,0" VerticalAlignment="Top" Width="225"/>
         <Label x:Name="label1" Content="Items" HorizontalAlignment="Left" Margin="15,232,0,0" VerticalAlignment="Top"/>
