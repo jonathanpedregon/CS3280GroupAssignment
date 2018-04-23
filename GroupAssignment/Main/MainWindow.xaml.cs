@@ -249,5 +249,11 @@ namespace GroupAssignment
             var searchWindow = new Search();
             searchWindow.ShowDialog();
         }
+        
+        private void MenuItem_Click_1(object sender, RoutedEventArgs e)
+        {
+            var editWindow = new Update();
+            editWindow.ShowDialog();
+        }
     }
 }
