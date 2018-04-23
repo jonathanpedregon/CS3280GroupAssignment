@@ -54,17 +54,8 @@ namespace GroupAssignment
 
         public void InsertItem(int itemId, int invoiceId)
         {
-            var quantityQuery = $"SELECT Quantity FROM InvoiceItems WHERE InvoiceId = {invoiceId} AND ItemId = {itemId}";
-            var quantity = DAL.ExecuteScalarSQL(quantityQuery);
-            if (quantity != "")
-            {
-                var itemQuantity = int.Parse(quantity);
-                IncrementItemQuantity(itemId, invoiceId, itemQuantity);
-            }
-            else
-            {
-                AddInvoiceItem(itemId, invoiceId);
-            }
+
+            AddInvoiceItem(itemId, invoiceId);
         }
 
         private void IncrementItemQuantity(int itemId, int invoiceId, int quantity)
@@ -79,11 +70,26 @@ namespace GroupAssignment
             DAL.ExecuteNonQuery(insertCommand);
         }
 
-        public List<Item> GetInvoiceItems(string invoiceId)
+        public void AddInvoiceItem(string itemId, string invoiceId)
         {
-            var query = $"SELECT Items.* FROM InvoiceItems, Items WHERE InvoiceId = {invoiceId}";
+            var insertCommand = $"INSERT INTO InvoiceItems (InvoiceId, ItemId) VALUES({invoiceId}, {itemId})";
+            DAL.ExecuteNonQuery(insertCommand);
+        }
+
+        public List<InvoiceItem> GetInvoiceItems(string invoiceId)
+        {
+            var query = $"SELECT InvoiceItemId, Items.* FROM InvoiceItems, Items WHERE InvoiceItems.ItemId = Items.ID AND InvoiceId = {invoiceId}";
             var results = DAL.ExecuteSQLStatement(query).Tables[0].Rows;
-            return GetItemsFromDataRows(results);
+            var invoiceItems = new List<InvoiceItem>();
+            foreach (DataRow result in results)
+            {
+                var invoiceItemId = int.Parse(result.ItemArray[0].ToString());
+                var itemId = int.Parse(result.ItemArray[1].ToString());
+                var name = result.ItemArray[2].ToString();
+                var cost = Math.Round(decimal.Parse(result.ItemArray[3].ToString()), 2);
+                invoiceItems.Add(new InvoiceItem(invoiceItemId, itemId, name, cost));
+            }
+            return invoiceItems;
         }
 
         private List<Item> GetItemsFromDataRows(DataRowCollection results)
@@ -106,6 +112,12 @@ namespace GroupAssignment
             DAL.ExecuteNonQuery(invoiceItemCommand);
             var invoiceCommand = $"DELETE * FROM Invoice WHERE ID = {invoiceId}";
             DAL.ExecuteNonQuery(invoiceCommand);
+        }
+
+        internal void DeleteInvoiceItem(string invoiceItemId)
+        {
+            var deleteCommand = $"Delete * FROM InvoiceItems WHERE InvoiceItemId = {invoiceItemId}";
+            DAL.ExecuteNonQuery(deleteCommand);
         }
     }
 }

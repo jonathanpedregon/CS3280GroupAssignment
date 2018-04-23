@@ -72,6 +72,7 @@
       <DependentUpon>EditInvoice.xaml</DependentUpon>
     </Compile>
     <Compile Include="Models\Invoice.cs" />
+    <Compile Include="Models\InvoiceItem.cs" />
     <Compile Include="Models\Item.cs" />
     <Compile Include="Search\Search.xaml.cs">
       <DependentUpon>Search.xaml</DependentUpon>

@@ -121,6 +121,102 @@ namespace GroupAssignment
             invoiceTotalTb.Text = $"${newTotal}";
         }
 
+        private void EditInvoiceButton_Click(object sender, RoutedEventArgs e)
+        {
+            EditInvoiceCanvas.Visibility = Visibility.Visible;
+            PopulateInvoiceDropdown();
+            CreateInvoiceItemsDataGrid();
+            PopulateEditInvoiceAddItemDropDown();
+        }
+
+        private void PopulateEditInvoiceAddItemDropDown()
+        {
+            var items = DbHandler.GetItems();
+            AddInvoiceItemDropDown.Items.Clear();
+            foreach (var item in items)
+            {
+                AddInvoiceItemDropDown.Items.Add(item.ToString());
+            }
+        }
+        private void PopulateInvoiceDropdown()
+        {
+            var invoices = DbHandler.GetInvoices();
+            invoiceDropDown.Items.Clear();
+            foreach (var invoice in invoices)
+            {
+                invoiceDropDown.Items.Add(invoice.Id);
+            }
+        }
+
+        private void PopulateInvoiceItemDataGrid(List<InvoiceItem> invoiceItems)
+        {
+            InvoiceItemsGrid.Items.Clear();
+            foreach (var item in invoiceItems)
+            {
+                InvoiceItemsGrid.Items.Add(item);
+            }
+        }
+
+        private void PopulateDeleteInvoiceItemDropDown(List<InvoiceItem> invoiceItems)
+        {
+            DeleteInvoiceItemDropDown.Items.Clear();
+            foreach (var invoiceItem in invoiceItems)
+            {
+                DeleteInvoiceItemDropDown.Items.Add(invoiceItem.InvoiceItemId);
+            }
+        }
+
+        private void invoiceDropDown_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            var invoiceId = invoiceDropDown.SelectedValue.ToString();
+            var items = DbHandler.GetInvoiceItems(invoiceId);
+
+            PopulateInvoiceItemDataGrid(items);
+            PopulateDeleteInvoiceItemDropDown(items);
+        }
+
+        private void CreateInvoiceItemsDataGrid()
+        {
+            DataGridTextColumn col1 = new DataGridTextColumn();
+            DataGridTextColumn col2 = new DataGridTextColumn();
+            DataGridTextColumn col3 = new DataGridTextColumn();
+            DataGridTextColumn col4 = new DataGridTextColumn();
+            InvoiceItemsGrid.Columns.Add(col1);
+            InvoiceItemsGrid.Columns.Add(col2);
+            InvoiceItemsGrid.Columns.Add(col3);
+            InvoiceItemsGrid.Columns.Add(col4);
+            col1.Binding = new Binding("InvoiceItemId");
+            col2.Binding = new Binding("Item Id");
+            col3.Binding = new Binding("Name");
+            col4.Binding = new Binding("Cost");
+            col1.Width = 75;
+            col2.Width = 50;
+            col3.Width = 150;
+            col4.Width = 50;
+            col1.Header = "InvoiceItemId";
+            col2.Header = "Id";
+            col3.Header = "Name";
+            col4.Header = "Cost";
+        }
+
+        private void AddItemButton_Click(object sender, RoutedEventArgs e)
+        {
+            var invoiceId = invoiceDropDown.SelectedValue.ToString();
+            var itemId = AddInvoiceItemDropDown.SelectedValue.ToString().Split('-')[0].Trim();
+            DbHandler.AddInvoiceItem(invoiceId, itemId);
+            var items = DbHandler.GetInvoiceItems(invoiceId);
+            PopulateInvoiceItemDataGrid(items);
+        }
+
+        private void DeleteItemButton_Click(object sender, RoutedEventArgs e)
+        {
+            var invoiceItemId = DeleteInvoiceItemDropDown.SelectedValue.ToString();
+            var invoiceId = invoiceDropDown.SelectedValue.ToString();
+            DbHandler.DeleteInvoiceItem(invoiceItemId);
+            var items = DbHandler.GetInvoiceItems(invoiceId);
+            PopulateInvoiceItemDataGrid(items);
+        }
+
         /* We will have createInvoice button that will allow the user to create a new invoice
 *  it will open up a new window that will allow user to input the date of the invoice
 * and the total charge of the invoice
