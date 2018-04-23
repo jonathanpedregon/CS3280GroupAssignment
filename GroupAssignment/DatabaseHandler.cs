@@ -91,6 +91,14 @@ namespace GroupAssignment
             }
             return invoiceItems;
         }
+        
+        public List<Item> GetInvoiceDate(string invoiceDate)
+        {
+            var query = $"SELECT InvoiceDate FROM Invoice WHERE InvoiceDate = {invoiceDate}";
+            var results = DAL.ExecuteSQLStatement(query).Tables[0].Rows;
+            return GetItemsFromDataRows(results);
+        }
+
 
         private List<Item> GetItemsFromDataRows(DataRowCollection results)
         {
