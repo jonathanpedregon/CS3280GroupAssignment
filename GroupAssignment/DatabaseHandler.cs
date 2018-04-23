@@ -66,7 +66,7 @@ namespace GroupAssignment
 
         private void AddInvoiceItem(int itemId, int invoiceId)
         {
-            var insertCommand = $"INSERT INTO InvoiceItems (InvoiceId, ItemId, Quantity) VALUES({invoiceId}, {itemId}, 1)";
+            var insertCommand = $"INSERT INTO InvoiceItems (InvoiceId, ItemId) VALUES({invoiceId}, {itemId})";
             DAL.ExecuteNonQuery(insertCommand);
         }
 

@@ -55,6 +55,8 @@ namespace GroupAssignment
         private void AddInvoiceButton_Click(object sender, RoutedEventArgs e)
         {
             AddInvoiceCanvas.Visibility = Visibility.Visible;
+            EditInvoiceCanvas.Visibility = Visibility.Collapsed;
+            DeleteInvoiceCanvas.Visibility = Visibility.Collapsed;
             GetAndPopulateItems();
             CreateAddInvoiceDataGrid();
         }
@@ -124,6 +126,8 @@ namespace GroupAssignment
         private void EditInvoiceButton_Click(object sender, RoutedEventArgs e)
         {
             EditInvoiceCanvas.Visibility = Visibility.Visible;
+            AddInvoiceCanvas.Visibility = Visibility.Collapsed;
+            DeleteInvoiceCanvas.Visibility = Visibility.Collapsed;
             PopulateInvoiceDropdown();
             CreateInvoiceItemsDataGrid();
             PopulateEditInvoiceAddItemDropDown();
@@ -141,10 +145,10 @@ namespace GroupAssignment
         private void PopulateInvoiceDropdown()
         {
             var invoices = DbHandler.GetInvoices();
-            invoiceDropDown.Items.Clear();
+            EditInvoiceDropDown.Items.Clear();
             foreach (var invoice in invoices)
             {
-                invoiceDropDown.Items.Add(invoice.Id);
+                EditInvoiceDropDown.Items.Add(invoice.Id);
             }
         }
 
@@ -168,7 +172,7 @@ namespace GroupAssignment
 
         private void invoiceDropDown_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            var invoiceId = invoiceDropDown.SelectedValue.ToString();
+            var invoiceId = EditInvoiceDropDown.SelectedValue.ToString();
             var items = DbHandler.GetInvoiceItems(invoiceId);
 
             PopulateInvoiceItemDataGrid(items);
@@ -201,40 +205,54 @@ namespace GroupAssignment
 
         private void AddItemButton_Click(object sender, RoutedEventArgs e)
         {
-            var invoiceId = invoiceDropDown.SelectedValue.ToString();
-            var itemId = AddInvoiceItemDropDown.SelectedValue.ToString().Split('-')[0].Trim();
-            DbHandler.AddInvoiceItem(invoiceId, itemId);
-            var items = DbHandler.GetInvoiceItems(invoiceId);
-            PopulateInvoiceItemDataGrid(items);
+            var invoiceId = EditInvoiceDropDown.SelectedValue.ToString();
+            try
+            {
+                var itemId = AddInvoiceItemDropDown.SelectedValue.ToString().Split('-')[0].Trim();
+                DbHandler.AddInvoiceItem(invoiceId, itemId);
+                var items = DbHandler.GetInvoiceItems(invoiceId);
+                PopulateInvoiceItemDataGrid(items);
+                PopulateDeleteInvoiceItemDropDown(items);
+            }
+            catch(Exception ex) { }
+            
         }
 
         private void DeleteItemButton_Click(object sender, RoutedEventArgs e)
         {
             var invoiceItemId = DeleteInvoiceItemDropDown.SelectedValue.ToString();
-            var invoiceId = invoiceDropDown.SelectedValue.ToString();
+            var invoiceId = EditInvoiceDropDown.SelectedValue.ToString();
             DbHandler.DeleteInvoiceItem(invoiceItemId);
             var items = DbHandler.GetInvoiceItems(invoiceId);
             PopulateInvoiceItemDataGrid(items);
         }
 
-        /* We will have createInvoice button that will allow the user to create a new invoice
-*  it will open up a new window that will allow user to input the date of the invoice
-* and the total charge of the invoice
-* 
-*/
+        private void DeleteInvoiceButton_Click(object sender, RoutedEventArgs e)
+        {
+            GetInvoices();
+            DeleteInvoiceCanvas.Visibility = Visibility.Visible;
+            AddInvoiceCanvas.Visibility = Visibility.Collapsed;
+            EditInvoiceCanvas.Visibility = Visibility.Collapsed;
+        }
 
-        /* We will have EditInvoice button that will allow the user to edit  invoice
-        *  it will open up a new window that will allow user to change the date of the invoice
-        * and the total charge of the invoice
-        * 
-        */
-        /* We will have DeleteInvoice button that will allow the user to delete invoice
-        *  it will open up a new window that will allow user to delete the date of the invoice
-        * and the total charge of the invoice
-        * 
-        */
-        // we can have data access class
-        // we will have sql generator
-        // invoice class that we can get all invoice data
+        private void GetInvoices()
+        {
+            DeleteInvoiceDropDown.Items.Clear();
+            var invoices = DbHandler.GetInvoices();
+            foreach (var invoice in invoices)
+            {
+                DeleteInvoiceDropDown.Items.Add(invoice.Id);
+            }
+        }
+
+        private void DeleteIndividualInvoiceButton_Click(object sender, RoutedEventArgs e)
+        {
+            var invoiceId = DeleteInvoiceDropDown.Text;
+            if (invoiceId != "")
+            {
+                DbHandler.DeleteInvoice(invoiceId);
+                GetInvoices();
+            }
+        }
     }
 }

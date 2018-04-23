@@ -61,16 +61,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>InvoicesDatabaseDataSet.xsd</DependentUpon>
     </Compile>
-    <Compile Include="Main\AddInvoice.xaml.cs">
-      <DependentUpon>AddInvoice.xaml</DependentUpon>
-    </Compile>
     <Compile Include="DatabaseHandler.cs" />
-    <Compile Include="Main\DeleteInvoice.xaml.cs">
-      <DependentUpon>DeleteInvoice.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Main\EditInvoice.xaml.cs">
-      <DependentUpon>EditInvoice.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Models\Invoice.cs" />
     <Compile Include="Models\InvoiceItem.cs" />
     <Compile Include="Models\Item.cs" />
@@ -80,18 +71,6 @@
     <Compile Include="Items\Items.xaml.cs">
       <DependentUpon>Items.xaml</DependentUpon>
     </Compile>
-    <Page Include="Main\AddInvoice.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Main\DeleteInvoice.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Main\EditInvoice.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Include="Main\MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

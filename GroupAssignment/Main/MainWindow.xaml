@@ -13,7 +13,7 @@
         </Menu>
         <Button x:Name="AddInvoiceButton" Content="Add Invoice" HorizontalAlignment="Left" Margin="145,17,0,0" VerticalAlignment="Top" Width="125" Height="42" Click="AddInvoiceButton_Click" />
         <Button x:Name="EditInvoiceButton" Content="Edit Invoice" HorizontalAlignment="Left" Margin="357,17,0,0" VerticalAlignment="Top" Width="125" Height="42" Click="EditInvoiceButton_Click" />
-        <Button x:Name="DeleteInvoiceButton" Content="Delete Invoice" HorizontalAlignment="Left" Margin="579,17,0,0" VerticalAlignment="Top" Width="125" Height="42"/>
+        <Button x:Name="DeleteInvoiceButton" Content="Delete Invoice" HorizontalAlignment="Left" Margin="553,17,0,0" VerticalAlignment="Top" Width="125" Height="42" Click="DeleteInvoiceButton_Click"/>
         <Canvas x:Name="AddInvoiceCanvas" HorizontalAlignment="Left" Height="442" Margin="159,89,0,0" VerticalAlignment="Top" Width="679" Visibility="Collapsed">
             <DatePicker HorizontalAlignment="Left" VerticalAlignment="Top" x:Name="invoiceDate" Canvas.Left="257" Canvas.Top="18"/>
             <Label x:Name="label" Content="Invoice Number:" HorizontalAlignment="Left" VerticalAlignment="Top" Canvas.Left="146" Canvas.Top="57"/>
@@ -26,14 +26,20 @@
             <TextBox x:Name="invoiceTotalTb" HorizontalAlignment="Center" Height="23" TextWrapping="Wrap" Text="$0.00" VerticalAlignment="Top" Width="120" IsReadOnly="True" Canvas.Left="250" Canvas.Top="93"/>
             <Button Content="CreateInvoiceButton" HorizontalAlignment="Left" VerticalAlignment="Top" Width="75" Canvas.Left="374" Canvas.Top="59" Click="CreateInvoiceButtonClick"/>
         </Canvas>
-        <Canvas x:Name="EditInvoiceCanvas" HorizontalAlignment="Left" Height="399" Margin="145,89,0,0" VerticalAlignment="Top" Width="796">
-            <ComboBox HorizontalAlignment="Left" VerticalAlignment="Top" Width="120" x:Name="invoiceDropDown" Canvas.Left="244" Canvas.Top="24" SelectionChanged="invoiceDropDown_SelectionChanged"/>
+        <Canvas x:Name="EditInvoiceCanvas" HorizontalAlignment="Left" Height="399" Margin="145,89,0,0" VerticalAlignment="Top" Width="796" Visibility="Collapsed">
+            <ComboBox HorizontalAlignment="Left" VerticalAlignment="Top" Width="120" x:Name="EditInvoiceDropDown" Canvas.Left="244" Canvas.Top="24" SelectionChanged="invoiceDropDown_SelectionChanged"/>
             <Label Content="Select An Invoice" HorizontalAlignment="Left" VerticalAlignment="Top" Canvas.Left="142" Canvas.Top="21"/>
             <DataGrid x:Name="InvoiceItemsGrid" HorizontalAlignment="Left" VerticalAlignment="Top" Canvas.Left="64" Canvas.Top="66"/>
             <ComboBox x:Name="DeleteInvoiceItemDropDown" Canvas.Left="409" Canvas.Top="66" Width="189"/>
             <Button x:Name="DeleteItemButton" Content="Delete Item" Canvas.Left="616" Canvas.Top="69" Width="75" Click="DeleteItemButton_Click"/>
             <ComboBox x:Name="AddInvoiceItemDropDown" Canvas.Left="409" Canvas.Top="168" Width="189"/>
             <Button x:Name="AddItemButton" Content="Add Item" Canvas.Left="616" Canvas.Top="168" Width="75" Click="AddItemButton_Click"/>
+            <Canvas Height="100" Width="100"/>
+        </Canvas>
+        <Canvas x:Name="DeleteInvoiceCanvas" HorizontalAlignment="Left" Height="420" Margin="145,89,0,0" VerticalAlignment="Top" Width="753" Visibility="Collapsed">
+            <ComboBox HorizontalAlignment="Left" VerticalAlignment="Top" Width="120" x:Name="DeleteInvoiceDropDown" Canvas.Left="286" Canvas.Top="29"/>
+            <Label Content="Select An Invoice" HorizontalAlignment="Left" VerticalAlignment="Top" Canvas.Left="185" Canvas.Top="26"/>
+            <Button x:Name="DeleteIndividualInvoiceButton" Content="Delete" HorizontalAlignment="Left" VerticalAlignment="Top" Width="75" Height="20" Canvas.Left="422" Canvas.Top="30" Click="DeleteIndividualInvoiceButton_Click"/>
         </Canvas>
 
     </Grid>
