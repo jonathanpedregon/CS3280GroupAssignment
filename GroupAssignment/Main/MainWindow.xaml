@@ -9,7 +9,7 @@
     <Grid Margin="0,0,-8,-21">
         <Menu x:Name="menu" HorizontalAlignment="Center" Height="100" Margin="27,89,949.8,0" VerticalAlignment="Top" Width="100">
             <MenuItem Header="Search" Click="MenuItem_Click"/>
-            <MenuItem Header="Edit Items"/>
+            <MenuItem Header="Edit Items" Click="MenuItem_Click_1"/>
         </Menu>
         <Button x:Name="AddInvoiceButton" Content="Add Invoice" HorizontalAlignment="Left" Margin="145,17,0,0" VerticalAlignment="Top" Width="125" Height="42" Click="AddInvoiceButton_Click" />
         <Button x:Name="EditInvoiceButton" Content="Edit Invoice" HorizontalAlignment="Left" Margin="357,17,0,0" VerticalAlignment="Top" Width="125" Height="42" Click="EditInvoiceButton_Click" />
